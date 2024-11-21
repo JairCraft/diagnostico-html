@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main # Despliega solo cambios en la rama principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: <IP_INSTANCIA> # Cambia esto por la IP de tu instancia
+          username: ec2-user # Usuario de tu instancia (generalmente `ec2-user`)
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./*" # Archivos a copiar
+          target: "/var/www/html/" # Ruta destino en la instancia
+
+      - name: Restart Apache
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: <IP_INSTANCIA>
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo systemctl restart httpd
