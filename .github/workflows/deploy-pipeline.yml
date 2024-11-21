@@ -16,14 +16,14 @@ jobs:
       - name: Copy files to EC2
         uses: appleboy/scp-action@v0.1.3
         with:
-          host:  54.221.144.153 # Cambia esto por la IP de tu instancia
+          host: 54.221.144.153 # Cambia esto por la IP de tu instancia
           username: ec2-user # Usuario de tu instancia (generalmente `ec2-user`)
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "./*" # Archivos a copiar
           target: "/var/www/diagnostico-html" # Ruta destino en la instancia
 
       - name: Restart Apache
-        uses: appleboy/ssh-action@v0.1.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: 54.221.144.153
           username: ec2-user
